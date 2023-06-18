@@ -26,8 +26,8 @@ class ProductItem extends StatelessWidget {
               arguments: product.id,
             );
           },
-          child: Image.asset(
-            product.imageUrl as String,
+          child: Image.network(
+            product.imageUrl ?? '',
             fit: BoxFit.cover,
           ),
         ),
@@ -35,38 +35,38 @@ class ProductItem extends StatelessWidget {
           backgroundColor: Colors.black87,
           leading: Consumer<Product>(
             builder: (ctx, product, _) => IconButton(
-              icon: Icon(
-                product.isFavorite ? Icons.favorite : Icons.favorite_border,
-              ),
-              color: Colors.deepOrange,
-              onPressed: () {
-                product.toggleFavoriteStatus();
-              },
-            ),
+                  icon: Icon(
+                    product.isFavorite ? Icons.favorite : Icons.favorite_border,
+                  ),
+                  color: Colors.deepOrange,
+                  onPressed: () {
+                    product.toggleFavoriteStatus();
+                  },
+                ),
           ),
           title: Text(
-            product.title as String,
+            product.title ?? '',
             textAlign: TextAlign.center,
           ),
           trailing: IconButton(
-            icon: const Icon(
+            icon: Icon(
               Icons.shopping_cart,
             ),
             onPressed: () {
-              cart.addItem(product.id as String, product.price as double,
-                  product.title as String);
+              cart.addItem(product.id as String, product.price as double, product.title as String);
               ScaffoldMessenger.of(context).hideCurrentSnackBar();
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content: const Text(
+                  content: Text(
                     'Added item to cart!',
                   ),
-                  duration: const Duration(seconds: 2),
+                  duration: Duration(seconds: 2),
                   action: SnackBarAction(
-                      label: 'UNDO',
-                      onPressed: () {
-                        cart.removeSingleItem(product.id as String);
-                      }),
+                    label: 'UNDO',
+                    onPressed: () {
+                      cart.removeSingleItem(product.id as String);
+                    },
+                  ),
                 ),
               );
             },
