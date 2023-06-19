@@ -147,8 +147,34 @@ class Products with ChangeNotifier {
   //   notifyListeners();
   // }
 
+ Future<void> fetchAndSetProducts() async {
+    const url = 'https://flutter-update-d4823-default-rtdb.asia-southeast1.firebasedatabase.app/products.json';
+    try {
+      final response = await http.get(Uri.parse(url));
+      final extractedData = json.decode(response.body) as Map<String, dynamic>;
+      
+      print(extractedData);
+      
+      final List<Product> loadedProducts = [];
+      extractedData.forEach((prodId, prodData) {
+        loadedProducts.add(Product(
+          id: prodId,
+          title: prodData['title'],
+          description: prodData['description'],
+          price: prodData['price'],
+          isFavorite: prodData['isFavorite'],
+          imageUrl: prodData['imageUrl'],
+        ));
+      });
+      _items = loadedProducts;
+      notifyListeners();
+    } catch (error) {
+      throw (error);
+    }
+  }
+
    Future<void> addProduct(Product product) async {
-    const url = 'https://flutter-update.firebaseio.com/products';
+    const url = 'https://flutter-update-d4823-default-rtdb.asia-southeast1.firebasedatabase.app/products.json';
     try {
       final response = await http.post(
         Uri.parse(url),
