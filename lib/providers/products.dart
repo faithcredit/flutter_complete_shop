@@ -181,11 +181,11 @@ class Products with ChangeNotifier {
   }
 
   Future<void> addProduct(Product product) async {
-    const url =
-        'https://flutter-update-d4823-default-rtdb.asia-southeast1.firebasedatabase.app/products.json';
+    final url =
+        Uri.parse('https://flutter-update-d4823-default-rtdb.asia-southeast1.firebasedatabase.app/products.json?auth=$authToken');
     try {
       final response = await http.post(
-        Uri.parse(url),
+        url,
         body: json.encode({
           'title': product.title,
           'description': product.description,
@@ -214,8 +214,8 @@ class Products with ChangeNotifier {
     final prodIndex = _items.indexWhere((prod) => prod.id == id);
     if (prodIndex >= 0) {
       final url =
-          'https://flutter-update-d4823-default-rtdb.asia-southeast1.firebasedatabase.app/products/$id.json';
-      await http.patch(Uri.parse(url),
+        Uri.parse('https://flutter-update-d4823-default-rtdb.asia-southeast1.firebasedatabase.app/products/$id.json?auth=$authToken');
+      await http.patch(url,
           body: json.encode({
             'title': newProduct.title,
             'description': newProduct.description,
@@ -231,12 +231,12 @@ class Products with ChangeNotifier {
 
   Future<void> deleteProduct(String id) async {
     final url =
-        'https://flutter-update-d4823-default-rtdb.asia-southeast1.firebasedatabase.app/products/$id.json';
+        Uri.parse('https://flutter-update-d4823-default-rtdb.asia-southeast1.firebasedatabase.app/products/$id.json?auth=$authToken');
     final existingProductIndex = _items.indexWhere((prod) => prod.id == id);
     var existingProduct = _items[existingProductIndex];
     _items.removeAt(existingProductIndex);
     notifyListeners();
-    final response = await http.delete(Uri.parse(url));
+    final response = await http.delete(url);
     if (response.statusCode >= 400) {
       _items.insert(existingProductIndex, existingProduct);
       notifyListeners();
