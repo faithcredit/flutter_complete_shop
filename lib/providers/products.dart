@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import './product.dart';
+import '../models/http_exception.dart';
 
 class Products with ChangeNotifier {
   // List<Product> _items = [
@@ -147,14 +148,15 @@ class Products with ChangeNotifier {
   //   notifyListeners();
   // }
 
- Future<void> fetchAndSetProducts() async {
-    const url = 'https://flutter-update-d4823-default-rtdb.asia-southeast1.firebasedatabase.app/products.json';
+  Future<void> fetchAndSetProducts() async {
+    const url =
+        'https://flutter-update-d4823-default-rtdb.asia-southeast1.firebasedatabase.app/products.json';
     try {
       final response = await http.get(Uri.parse(url));
       final extractedData = json.decode(response.body) as Map<String, dynamic>;
-      
+
       print(extractedData);
-      
+
       final List<Product> loadedProducts = [];
       extractedData.forEach((prodId, prodData) {
         loadedProducts.add(Product(
@@ -173,8 +175,9 @@ class Products with ChangeNotifier {
     }
   }
 
-   Future<void> addProduct(Product product) async {
-    const url = 'https://flutter-update-d4823-default-rtdb.asia-southeast1.firebasedatabase.app/products.json';
+  Future<void> addProduct(Product product) async {
+    const url =
+        'https://flutter-update-d4823-default-rtdb.asia-southeast1.firebasedatabase.app/products.json';
     try {
       final response = await http.post(
         Uri.parse(url),
@@ -202,10 +205,11 @@ class Products with ChangeNotifier {
     }
   }
 
-   Future<void> updateProduct(String id, Product newProduct) async {
+  Future<void> updateProduct(String id, Product newProduct) async {
     final prodIndex = _items.indexWhere((prod) => prod.id == id);
     if (prodIndex >= 0) {
-      final url = 'https://flutter-update-d4823-default-rtdb.asia-southeast1.firebasedatabase.app/products/$id.json';
+      final url =
+          'https://flutter-update-d4823-default-rtdb.asia-southeast1.firebasedatabase.app/products/$id.json';
       await http.patch(Uri.parse(url),
           body: json.encode({
             'title': newProduct.title,
@@ -220,8 +224,25 @@ class Products with ChangeNotifier {
     }
   }
 
-  void deleteProduct(String id) {
-    _items.removeWhere((prod) => prod.id == id);
+  Future<void> deleteProduct(String id) async {
+    final url =
+        'https://flutter-update-d4823-default-rtdb.asia-southeast1.firebasedatabase.app/products/$id.json';
+    final existingProductIndex = _items.indexWhere((prod) => prod.id == id);
+    var existingProduct = _items[existingProductIndex];
+    _items.removeAt(existingProductIndex);
     notifyListeners();
+    final response = await http.delete(Uri.parse(url));
+    if (response.statusCode >= 400) {
+      _items.insert(existingProductIndex, existingProduct);
+      notifyListeners();
+      throw HttpException('Could not delete product.');
+    }
+    existingProduct = Product(
+      id: null,
+      title: '',
+      price: 0,
+      description: '',
+      imageUrl: '',
+    );
   }
 }
