@@ -18,8 +18,8 @@ class ProductItem extends StatelessWidget {
     final product = Provider.of<Product>(context, listen: false);
     final cart = Provider.of<Cart>(context, listen: false);
     final authData = Provider.of<Auth>(context, listen: false);
-   
-   return ClipRRect(
+
+    return ClipRRect(
       borderRadius: BorderRadius.circular(10),
       child: GridTile(
         child: GestureDetector(
@@ -38,14 +38,15 @@ class ProductItem extends StatelessWidget {
           backgroundColor: Colors.black87,
           leading: Consumer<Product>(
             builder: (ctx, product, _) => IconButton(
-                  icon: Icon(
-                    product.isFavorite ? Icons.favorite : Icons.favorite_border,
-                  ),
-                  color: Colors.deepOrange,
-                  onPressed: () {
-                    product.toggleFavoriteStatus(authData.token as String);
-                  },
-                ),
+              icon: Icon(
+                product.isFavorite ? Icons.favorite : Icons.favorite_border,
+              ),
+              color: Colors.deepOrange,
+              onPressed: () {
+                product.toggleFavoriteStatus(
+                    authData.token as String, authData.userId as String);
+              },
+            ),
           ),
           title: Text(
             product.title ?? '',
@@ -56,7 +57,8 @@ class ProductItem extends StatelessWidget {
               Icons.shopping_cart,
             ),
             onPressed: () {
-              cart.addItem(product.id as String, product.price as double, product.title as String);
+              cart.addItem(product.id as String, product.price as double,
+                  product.title as String);
               ScaffoldMessenger.of(context).hideCurrentSnackBar();
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
