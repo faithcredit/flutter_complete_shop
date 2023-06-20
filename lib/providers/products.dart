@@ -122,8 +122,8 @@ class Products with ChangeNotifier {
     ),
   ];
   // var _showFavoritesOnly = false;
-  final String authToken;
-  final String userId;
+  final String? authToken;
+  final String? userId;
   Products(this.authToken, this.userId, this._items);
 
   List<Product> get items {
@@ -137,7 +137,7 @@ class Products with ChangeNotifier {
     return _items.where((prodItem) => prodItem.isFavorite).toList();
   }
 
-  Product findById(String id) {
+  Product findById(String? id) {
     return _items.firstWhere((prod) => prod.id == id);
   }
 
@@ -217,7 +217,7 @@ class Products with ChangeNotifier {
     }
   }
 
-  Future<void> updateProduct(String id, Product newProduct) async {
+  Future<void> updateProduct(String? id, Product newProduct) async {
     final prodIndex = _items.indexWhere((prod) => prod.id == id);
     if (prodIndex >= 0) {
       final url = Uri.parse(
@@ -236,7 +236,7 @@ class Products with ChangeNotifier {
     }
   }
 
-  Future<void> deleteProduct(String id) async {
+  Future<void> deleteProduct(String? id) async {
     final url = Uri.parse(
         'https://flutter-update-d4823-default-rtdb.asia-southeast1.firebasedatabase.app/products/$id.json?auth=$authToken');
     final existingProductIndex = _items.indexWhere((prod) => prod.id == id);

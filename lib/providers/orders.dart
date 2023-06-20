@@ -21,8 +21,8 @@ class OrderItem {
 
 class Orders with ChangeNotifier {
   List<OrderItem> _orders = [];
-  final String authToken;
- final String userId;
+  final String? authToken;
+ final String? userId;
   Orders(this.authToken,this.userId, this._orders);
 
   List<OrderItem> get orders {
@@ -61,7 +61,7 @@ class Orders with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> addOrder(List<CartItem> cartProducts, double total) async {
+  Future<void> addOrder(List<CartItem> cartProducts, double? total) async {
     final url =
         Uri.parse('https://flutter-update-d4823-default-rtdb.asia-southeast1.firebasedatabase.app/orders/$userId.json?auth=$authToken');
     final timestamp = DateTime.now();
