@@ -1,4 +1,4 @@
-# flutter_shop
+![image](https://github.com/faithcredit/flutter_complete_shop/assets/130277189/fd2c508d-27f3-4d24-bce1-d666dac4ea41)# flutter_shop
 
 A new Flutter project.
 
@@ -29,3 +29,7 @@ flutter run
 ![4](/docs/4.png)
 ![5](/docs/5.png)
 ![6](/docs/6.png)
+
+My Contacts:
+Skype: live:.cid.2fd64e0ca7cf706c
+Telegram: @dancingball
